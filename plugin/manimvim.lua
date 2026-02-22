@@ -1,0 +1,1 @@
+require("manimvim").setup()
