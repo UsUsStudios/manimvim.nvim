@@ -33,14 +33,6 @@ function has_value(tab, val)
 	return false -- Item not found after checking all elements
 end
 
-local items = { "apple", "orange", "pear", "banana" }
-
-if has_value(items, "orange") then
-	print("Orange is in the list.")
-else
-	print("Orange is not in the list.")
-end
-
 function M.get_scenes()
 	local cmd = string.format(
 		[[python3 -c "
@@ -85,7 +77,6 @@ function M.get_current_python()
 				return path
 			end
 		end
-
 		return nil
 	end
 
