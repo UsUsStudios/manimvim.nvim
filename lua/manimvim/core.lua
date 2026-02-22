@@ -3,7 +3,8 @@ local M = {}
 local previous = ""
 
 function M.render()
-	local scenes = { "CreateCircle" }
+	local scenes = M.get_scenes()
+	print(scenes)
 	if previous ~= "" then
 		table.insert(scenes, 1, previous .. " (last picked)")
 	end
@@ -22,6 +23,29 @@ function M.render()
 			print("Render cancelled")
 		end
 	end)
+end
+
+function M.get_scenes()
+	local cmd = string.format(
+		[[python3 -c "
+import ast
+with open('%s') as f:
+    tree = ast.parse(f.read())
+    print('\\n'.join([n.name for n in ast.walk(tree) if isinstance(n, ast.ClassDef) and not n.name.startswith('_')]))
+"]],
+		vim.fn.expand("%:p")
+	)
+
+	local result = vim.fn.system(cmd)
+
+	if vim.v.shell_error == 0 then
+		local classes = vim.split(result, "\n")
+		if classes[#classes] == "" then
+			table.remove(classes)
+		end
+		return classes
+	end
+	return {}
 end
 
 function M.get_current_python()
