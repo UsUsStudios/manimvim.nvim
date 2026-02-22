@@ -4,8 +4,7 @@ local previous = ""
 
 function M.render()
 	local scenes = M.get_scenes()
-	print(scenes)
-	if previous ~= "" then
+	if previous ~= "" and has_value(scenes, previous) then
 		table.insert(scenes, 1, previous .. " (last picked)")
 	end
 
@@ -23,6 +22,23 @@ function M.render()
 			print("Render cancelled")
 		end
 	end)
+end
+
+function has_value(tab, val)
+	for index, value in ipairs(tab) do
+		if value == val then
+			return true -- Item found
+		end
+	end
+	return false -- Item not found after checking all elements
+end
+
+local items = { "apple", "orange", "pear", "banana" }
+
+if has_value(items, "orange") then
+	print("Orange is in the list.")
+else
+	print("Orange is not in the list.")
 end
 
 function M.get_scenes()
