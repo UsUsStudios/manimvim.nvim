@@ -31,3 +31,6 @@ require("manimvim").setup({
 	}
 })
 ```
+
+## Contribution
+Feel free to make a pull request.
