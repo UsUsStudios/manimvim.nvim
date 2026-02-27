@@ -2,7 +2,11 @@ local M = {}
 
 local previous = ""
 
-function M.render()
+function M.render_no_args(play)
+	M.render({ M.config.rendering.quality }, play)
+end
+
+function M.render(args, play) -- args is quality
 	local scenes = M.get_scenes()
 	if previous ~= "" and has_value(scenes, previous) then
 		table.insert(scenes, 1, previous .. " (last picked)")
@@ -14,9 +18,9 @@ function M.render()
 		if choice then
 			if choice ~= previous .. " (last picked)" then
 				previous = choice
-				M.render_scene(choice)
+				M.render_scene(choice, args, play)
 			else
-				M.render_scene(previous)
+				M.render_scene(previous, args, play)
 			end
 		else
 			print("Render cancelled")
@@ -89,11 +93,15 @@ function M.get_current_python()
 	return nil
 end
 
-function M.render_scene(scene)
+function M.render_scene(scene, quality, play)
 	local filename = vim.fn.expand("%:p")
 	local python = M.get_current_python()
 	if python then
-		vim.cmd("!" .. python .. " -m manim -pql " .. filename .. " " .. scene)
+		if play then
+			vim.cmd("!" .. python .. " -m manim -pq" .. quality .. " " .. filename .. " " .. scene)
+		else
+			vim.cmd("!" .. python .. " -m manim -q" .. quality .. " " .. filename .. " " .. scene)
+		end
 	end
 end
 

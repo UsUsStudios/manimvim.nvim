@@ -19,7 +19,8 @@ use {
 
 ## Usage
 
-Use `:Manim` or the keymap `<leader>mm` and then select the scene you would like to render.
+Use `:Manim [quality]` or the keymap `<leader>mm` and then select the scene you would like to render.
+The `[quality]` can be l (low), m (medium), h (high), p (2k) or k (4k).
 
 ## Configuration
 
@@ -28,6 +29,10 @@ require("manimvim").setup({
 	keymaps = {
 		enable = true, -- whether to automatically set keymaps
 		render = "<leader>mm", -- what the keymap for rendering should be
+	},
+	rendering = {
+		quality = "m", -- default render quality. l: low, m: medium, h: high, p: 2k, k: 4k
+		play = true, -- whether to play the video after rendering
 	}
 })
 ```

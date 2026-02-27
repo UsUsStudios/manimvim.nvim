@@ -5,6 +5,10 @@ M.defaults = {
 		enable = true, -- whether to automatically set keymaps
 		render = "<leader>mm", -- what the keymap for rendering should be
 	},
+	rendering = {
+		quality = "m", -- default render quality. l: low, m: medium, h: high, p: 2k, k: 4k
+		play = true, -- whether to play the video after rendering
+	},
 }
 
 M.config = {}
@@ -24,9 +28,13 @@ function M.setup(opts)
 end
 
 function M.setup_commands()
-	vim.api.nvim_create_user_command("Manim", function()
-		core.render()
-	end, {})
+	vim.api.nvim_create_user_command("Manim", function(opts)
+		if opts.args then
+			core.render(opts.args, M.config.rendering.play)
+		else
+			core.render_no_args(M.config.rendering.play)
+		end
+	end, { nargs = "?" })
 end
 
 function M.clear_keymaps()
@@ -37,7 +45,7 @@ function M.clear_keymaps()
 end
 
 function M.setup_keymaps()
-	M.set_keymap("n", M.config.keymaps.render, ":Manim<CR>", {})
+	M.set_keymap("n", M.config.keymaps.render, ":Manim " .. M.config.rendering.quality .. "<CR>", {})
 end
 
 function M.set_keymap(mode, lhs, rhs, opts)
